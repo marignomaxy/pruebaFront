@@ -6,12 +6,12 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class BuscadorServicesService {
-  private apiUrl = 'http://localhost:8080/api/busqueda';
+  private apiUrl =
+    'https://backendprueba-production-4ca5.up.railway.app/api/busqueda';
 
   constructor(private http: HttpClient) {}
 
   buscar(busquedas: string[]): Observable<any[]> {
-    console.log('Buscando:', busquedas);
     return this.http.post<any[]>(this.apiUrl, busquedas);
   }
 }
