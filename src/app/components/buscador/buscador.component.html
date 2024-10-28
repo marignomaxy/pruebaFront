@@ -1,0 +1,130 @@
+<h2 class="text-center mb-4">Formulario de Búsqueda de Autos</h2>
+
+<div *ngIf="!datosRecibidos">
+  <div class="flex justify-center mb-4">
+    <mat-form-field>
+      <input
+        matInput
+        type="number"
+        placeholder="Cantidad de Autos"
+        [(ngModel)]="cantidadAutos"
+        (ngModelChange)="actualizarCantidadAutos()"
+        name="cantidadAutos"
+        required
+      />
+    </mat-form-field>
+  </div>
+  <div
+    *ngFor="let auto of autos; let i = index"
+    class="flex justify-center space-x-4"
+  >
+    <div>
+      <mat-form-field>
+        <input
+          matInput
+          placeholder="Marca"
+          [(ngModel)]="auto.marca"
+          name="marca{{ i }}"
+          required
+        />
+      </mat-form-field>
+    </div>
+    <div>
+      <mat-form-field>
+        <input
+          matInput
+          placeholder="Modelo"
+          [(ngModel)]="auto.modelo"
+          name="modelo{{ i }}"
+          required
+        />
+      </mat-form-field>
+    </div>
+    <div>
+      <mat-form-field>
+        <input
+          matInput
+          placeholder="Año"
+          [(ngModel)]="auto.anio"
+          name="anio{{ i }}"
+          required
+        />
+      </mat-form-field>
+    </div>
+  </div>
+</div>
+
+<div class="flex justify-center mt-4" *ngIf="!datosRecibidos">
+  <button mat-raised-button color="primary" (click)="buscar()">Buscar</button>
+</div>
+
+<!-- Mostrar los datos de la respuesta -->
+<div *ngIf="datosRecibidos" class="mt-4">
+  <div *ngFor="let resultado of resultados; let i = index">
+    <div
+      *ngIf="resultado.mensajeError"
+      class="flex justify-center space-x-3 mt-4"
+    >
+      <p style="color: red">{{ resultado.mensajeError }}</p>
+    </div>
+    <div *ngIf="!resultado.mensajeError" class="flex justify-center space-x-3">
+      <p><strong>Marca:</strong> {{ resultado.auto.de_MARCA }}</p>
+      <p><strong>Modelo:</strong> {{ resultado.auto.de_MODELO }}</p>
+      <p><strong>Año:</strong> {{ resultado.auto.anio }}</p>
+      <p>
+        <strong>Tipo de Vehículo:</strong>
+        {{ resultado.auto.dr_TIPODEVEHICULO }}
+      </p>
+      <p><strong>Código de Marca:</strong> {{ resultado.auto.cd_MARCA }}</p>
+      <p><strong>Código de Modelo:</strong> {{ resultado.auto.cd_MODELO }}</p>
+      <p>
+        <strong>Código de Tipo de Vehículo:</strong>
+        {{ resultado.auto.cd_TIPODEVEHICULO }}
+      </p>
+    </div>
+    <div class="flex justify-center items-center space-x-4 mt-4">
+      <div>
+        <mat-form-field class="w-full">
+          <input
+            matInput
+            placeholder="Patente"
+            [(ngModel)]="patente[i]"
+            name="patente{{ i }}"
+            [disabled]="resultado.mensajeError"
+          />
+        </mat-form-field>
+      </div>
+      <div>
+        <mat-form-field class="w-full">
+          <input
+            matInput
+            placeholder="Motor"
+            [(ngModel)]="motor[i]"
+            name="motor{{ i }}"
+            [disabled]="resultado.mensajeError"
+          />
+        </mat-form-field>
+      </div>
+      <div>
+        <mat-form-field class="w-full">
+          <input
+            matInput
+            placeholder="Chasis"
+            [(ngModel)]="chasis[i]"
+            name="chasis{{ i }}"
+            [disabled]="resultado.mensajeError"
+          />
+        </mat-form-field>
+      </div>
+    </div>
+    <hr />
+  </div>
+  <div class="flex justify-center mt-4">
+    <button mat-raised-button color="primary" (click)="crear()">Guardar</button>
+  </div>
+  <div class="flex justify-center mt-4">
+    <button mat-raised-button color="primary" (click)="nueva()">
+      Nueva Búsqueda
+    </button>
+  </div>
+</div>
