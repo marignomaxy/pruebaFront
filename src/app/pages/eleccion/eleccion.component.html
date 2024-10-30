@@ -1,0 +1,33 @@
+<h2 class="text-center">Seleccione cómo cargar los datos</h2>
+<div class="flex justify-center gap-16">
+  <div class="option">
+    <button
+      mat-raised-button
+      color="accent"
+      class="flex flex-col items-center p-4"
+      (click)="router.navigate(['/busqueda-manual'])"
+    >
+      <mat-icon class="text-4xl mb-2">edit</mat-icon>
+      <span class="text-lg font-semibold">Cargar Datos Manualmente</span>
+    </button>
+  </div>
+
+  <div class="option">
+    <button
+      mat-raised-button
+      color="accent"
+      class="flex flex-col items-center p-4"
+    >
+      <label for="fileInput" class="cursor-pointer">
+        <span class="text-lg font-semibold">Cargar Excel</span>
+      </label>
+      <input
+        id="fileInput"
+        type="file"
+        (change)="onFileChange($event)"
+        accept=".xlsx, .xls"
+        style="display: none"
+      />
+    </button>
+  </div>
+</div>
