@@ -48,4 +48,11 @@ export class EleccionComponent {
       anio: row[2] ? row[2].toString() : '', // Verificar si row[2] no es undefined
     }));
   }
+
+  downloadModel() {
+    const link = document.createElement('a');
+    link.href = 'Modelo.xlsx'; // Ruta relativa a la carpeta 'public'
+    link.download = 'Modelo.xlsx';
+    link.click();
+  }
 }

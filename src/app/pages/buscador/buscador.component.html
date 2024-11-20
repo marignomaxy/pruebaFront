@@ -17,7 +17,7 @@
       </mat-form-field>
     </div>
 
-    <div class="flex justify-center">
+    <div class="flex justify-center mx-5">
       <table mat-table [dataSource]="autos" class="mat-elevation-z8">
         <ng-container matColumnDef="item">
           <th mat-header-cell *matHeaderCellDef>Item</th>
@@ -39,21 +39,6 @@
           </td>
         </ng-container>
 
-        <ng-container matColumnDef="modelo">
-          <th mat-header-cell *matHeaderCellDef>Modelo</th>
-          <td mat-cell *matCellDef="let auto; let i = index">
-            <mat-form-field class="w-full mx-2">
-              <input
-                matInput
-                placeholder="Modelo"
-                [(ngModel)]="auto.modelo"
-                name="modelo{{ i }}"
-                required
-              />
-            </mat-form-field>
-          </td>
-        </ng-container>
-
         <ng-container matColumnDef="anio">
           <th mat-header-cell *matHeaderCellDef>Año</th>
           <td mat-cell *matCellDef="let auto; let i = index">
@@ -63,6 +48,21 @@
                 placeholder="Año"
                 [(ngModel)]="auto.anio"
                 name="anio{{ i }}"
+                required
+              />
+            </mat-form-field>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="modelo">
+          <th mat-header-cell *matHeaderCellDef>Modelo</th>
+          <td mat-cell *matCellDef="let auto; let i = index">
+            <mat-form-field class="w-full mx-2">
+              <input
+                matInput
+                placeholder="Modelo"
+                [(ngModel)]="auto.modelo"
+                name="modelo{{ i }}"
                 required
               />
             </mat-form-field>
@@ -91,7 +91,7 @@
       </mat-form-field>
     </div>
 
-    <div class="flex justify-center">
+    <div class="flex justify-center mx-5">
       <table mat-table [dataSource]="autos" class="mat-elevation-z8">
         <ng-container matColumnDef="item">
           <th mat-header-cell *matHeaderCellDef>Item</th>
@@ -113,21 +113,6 @@
           </td>
         </ng-container>
 
-        <ng-container matColumnDef="modelo">
-          <th mat-header-cell *matHeaderCellDef>Modelo</th>
-          <td mat-cell *matCellDef="let auto; let i = index">
-            <mat-form-field class="w-full mx-2">
-              <input
-                matInput
-                placeholder="Modelo"
-                [(ngModel)]="auto.modelo"
-                name="modelo{{ i }}"
-                required
-              />
-            </mat-form-field>
-          </td>
-        </ng-container>
-
         <ng-container matColumnDef="anio">
           <th mat-header-cell *matHeaderCellDef>Año</th>
           <td mat-cell *matCellDef="let auto; let i = index">
@@ -137,6 +122,21 @@
                 placeholder="Año"
                 [(ngModel)]="auto.anio"
                 name="anio{{ i }}"
+                required
+              />
+            </mat-form-field>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="modelo">
+          <th mat-header-cell *matHeaderCellDef>Modelo</th>
+          <td mat-cell *matCellDef="let auto; let i = index">
+            <mat-form-field class="w-full mx-2">
+              <input
+                matInput
+                placeholder="Modelo"
+                [(ngModel)]="auto.modelo"
+                name="modelo{{ i }}"
                 required
               />
             </mat-form-field>
@@ -170,22 +170,22 @@
       </td>
     </ng-container>
 
-    <!-- Modelo Column -->
-    <ng-container matColumnDef="de_MODELO">
-      <th mat-header-cell *matHeaderCellDef>Modelo</th>
-      <td mat-cell *matCellDef="let resultado">
-        <ng-container *ngIf="resultado.auto">
-          {{ resultado.auto.de_MODELO }}
-        </ng-container>
-      </td>
-    </ng-container>
-
     <!-- Año Column -->
     <ng-container matColumnDef="anio">
       <th mat-header-cell *matHeaderCellDef>Año</th>
       <td mat-cell *matCellDef="let resultado">
         <ng-container *ngIf="resultado.auto">
           {{ resultado.auto.anio }}
+        </ng-container>
+      </td>
+    </ng-container>
+
+    <!-- Modelo Column -->
+    <ng-container matColumnDef="de_MODELO">
+      <th mat-header-cell *matHeaderCellDef>Modelo</th>
+      <td mat-cell *matCellDef="let resultado">
+        <ng-container *ngIf="resultado.auto">
+          {{ resultado.auto.de_MODELO }}
         </ng-container>
       </td>
     </ng-container>

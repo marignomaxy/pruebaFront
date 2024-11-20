@@ -10,6 +10,7 @@ import { Router } from '@angular/router';
 import { MatTableModule } from '@angular/material/table';
 import * as XLSX from 'xlsx';
 import * as FileSaver from 'file-saver';
+import { MatPaginator } from '@angular/material/paginator';
 
 const EXCEL_TYPE =
   'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
@@ -24,14 +25,17 @@ const EXCEL_TYPE =
     MatButtonModule,
     FormsModule,
     MatTableModule,
+    MatPaginator,
   ],
   templateUrl: './buscador.component.html',
   styleUrls: ['./buscador.component.scss'],
 })
 export class BuscadorComponent {
+  totalAutos: number = 0;
+  pageEvent: any;
   cantidadAutos: number = 1;
   autos: { marca: string; modelo: string; anio: string }[] = [
-    { marca: '', modelo: '', anio: '' },
+    { marca: '', anio: '', modelo: '' },
   ];
   patente: string[] = [];
   motor: string[] = [];
@@ -41,12 +45,12 @@ export class BuscadorComponent {
   datosRecibidos: boolean = false;
   cargaDesdeServicio: boolean = false;
   mostrarCamposEntrada: boolean = true;
-  displayedColumnsAutos: string[] = ['item', 'marca', 'modelo', 'anio'];
+  displayedColumnsAutos: string[] = ['item', 'marca', 'anio', 'modelo'];
   displayedColumnsResultados: string[] = [
     'item',
     'de_MARCA',
-    'de_MODELO',
     'anio',
+    'de_MODELO',
     'dr_TIPODEVEHICULO',
     'cd_MARCA',
     'cd_MODELO',
@@ -125,11 +129,11 @@ export class BuscadorComponent {
 
   crear() {
     const data = this.resultados.map((resultado, index) => ({
-      MARCA: resultado.auto?.de_MARCA || '',
+      MARCA: resultado.auto?.cd_MARCA || '',
       ANIO: resultado.auto?.anio || '',
-      MODELO: resultado.auto?.de_MODELO || '',
+      MODELO: resultado.auto?.cd_MODELO || '',
       SUMA_ASEGURADA: '', // Campo vacío
-      TP_VEHICULO: resultado.auto?.dr_TIPODEVEHICULO || '',
+      TP_VEHICULO: resultado.auto?.cd_TIPODEVEHICULO || '',
       PLAN: resultado.plan || '', // Campo de entrada
       FRANQUICIA: resultado.franquicia || '', // Campo de entrada
       PATENTE: resultado.patente || '', // Campo de entrada
