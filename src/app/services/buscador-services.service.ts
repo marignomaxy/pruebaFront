@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { catchError, Observable, of, throwError } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -12,6 +12,16 @@ export class BuscadorServicesService {
   constructor(private http: HttpClient) {}
 
   buscar(busquedas: string[]): Observable<any[]> {
-    return this.http.post<any[]>(this.apiUrl, busquedas);
+    return this.http.post<any[]>(this.apiUrl, busquedas).pipe(
+      catchError((error: HttpErrorResponse) => {
+        console.error('Error occurred:', error);
+        return of(
+          busquedas.map((busqueda) => ({
+            error: error.error || 'Error desconocido',
+            busqueda,
+          }))
+        );
+      })
+    );
   }
 }

@@ -10,7 +10,8 @@ import { Router } from '@angular/router';
 import { MatTableModule } from '@angular/material/table';
 import * as XLSX from 'xlsx';
 import * as FileSaver from 'file-saver';
-import { MatPaginator } from '@angular/material/paginator';
+import { FormularioAutosComponent } from '../../components/formulario-autos/formulario-autos.component';
+import { ResultadoAutosComponent } from '../../components/resultado-autos/resultado-autos.component';
 
 const EXCEL_TYPE =
   'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
@@ -25,43 +26,29 @@ const EXCEL_TYPE =
     MatButtonModule,
     FormsModule,
     MatTableModule,
-    MatPaginator,
+    FormularioAutosComponent,
+    ResultadoAutosComponent,
   ],
   templateUrl: './buscador.component.html',
   styleUrls: ['./buscador.component.scss'],
 })
 export class BuscadorComponent {
-  totalAutos: number = 0;
-  pageEvent: any;
+  autos: {
+    item: number;
+    marca: string;
+    modelo: string;
+    anio: string;
+    plan: string;
+    franquicia: string;
+    patente: string;
+    motor: string;
+    chasis: string;
+  }[] = [];
   cantidadAutos: number = 1;
-  autos: { marca: string; modelo: string; anio: string }[] = [
-    { marca: '', anio: '', modelo: '' },
-  ];
-  patente: string[] = [];
-  motor: string[] = [];
-  chasis: string[] = [];
   resultados: any[] = [];
-  mostrarCamposAdicionales: boolean = false;
   datosRecibidos: boolean = false;
-  cargaDesdeServicio: boolean = false;
-  mostrarCamposEntrada: boolean = true;
-  displayedColumnsAutos: string[] = ['item', 'marca', 'anio', 'modelo'];
-  displayedColumnsResultados: string[] = [
-    'item',
-    'de_MARCA',
-    'anio',
-    'de_MODELO',
-    'dr_TIPODEVEHICULO',
-    'cd_MARCA',
-    'cd_MODELO',
-    'cd_TIPODEVEHICULO',
-    'plan',
-    'franquicia',
-    'patente',
-    'motor',
-    'chasis',
-    'mensajeError',
-  ];
+  datosAdicionales: any[] = [];
+  errorMessage: string = '';
 
   constructor(
     private buscadorService: BuscadorServicesService,
@@ -70,75 +57,96 @@ export class BuscadorComponent {
   ) {}
 
   ngOnInit(): void {
-    // Obtener autos del servicio
     this.autos = this.autoService.getAutos();
     this.cantidadAutos = this.autos.length || 1;
 
-    console.log('Autos cargados desde el servicio:', this.autos);
-
-    if (this.autos.length > 0) {
-      this.cargaDesdeServicio = true;
-      this.datosRecibidos = false; // Para permitir una nueva búsqueda
-    } else {
+    if (this.autos.length === 0) {
       this.autos = Array.from({ length: this.cantidadAutos }, () => ({
+        item: 1,
         marca: '',
-        modelo: '',
         anio: '',
+        modelo: '',
+        plan: '',
+        franquicia: '',
+        patente: '',
+        motor: '',
+        chasis: '',
       }));
-      this.datosRecibidos = false;
-      this.cargaDesdeServicio = false;
     }
   }
 
-  actualizarCantidadAutos() {
-    if (this.cantidadAutos < 1) {
-      this.cantidadAutos = 1; // Restablecer a 1 si se introduce un número menor que 1
-      return;
-    }
+  nuevaBusqueda() {
+    const busquedas = this.autos.map(
+      (auto) => `${auto.marca} ${auto.modelo} ${auto.anio}`
+    );
 
-    const currentAutos = [...this.autos]; // Clonar el array actual de autos
-    const newAutos = Array.from({ length: this.cantidadAutos }, (v, i) => ({
-      marca: currentAutos[i]?.marca || '', // Mantener la marca si existe
-      modelo: currentAutos[i]?.modelo || '', // Mantener el modelo si existe
-      anio: currentAutos[i]?.anio || '', // Mantener el año si existe
+    this.datosAdicionales = this.autos.map((auto) => ({
+      plan: auto.plan,
+      franquicia: auto.franquicia,
+      patente: auto.patente,
+      motor: auto.motor,
+      chasis: auto.chasis,
     }));
 
-    this.autos = newAutos; // Actualizar el array de autos
+    this.buscadorService.buscar(busquedas).subscribe(
+      (response) => {
+        console.log(response);
+        this.resultados = response.map((resultado, index) => ({
+          ...resultado.auto,
+          ...this.datosAdicionales[index],
+        }));
+        this.datosRecibidos = true;
+      },
+      (error) => {
+        this.errorMessage = error.message || 'Error desconocido';
+        this.resultados = [];
+      }
+    );
   }
 
-  buscar() {
-    if (!this.datosRecibidos) {
-      // Solo ejecuta si datosRecibidos es falso
-      const busquedas = this.autos.map(
-        (auto) => `${auto.marca} ${auto.modelo} ${auto.anio}`
-      );
-
-      this.buscadorService.buscar(busquedas).subscribe(
-        (response) => {
-          this.resultados = response;
-          console.log('Resultados de la búsqueda:', this.resultados);
-          this.datosRecibidos = true; // Cambia a true después de la búsqueda exitosa
-          this.mostrarCamposEntrada = false;
-        },
-        (error) => {
-          console.error('Error en la búsqueda:', error);
-        }
-      );
-    }
+  actualizarResultados(resultados: any[]) {
+    this.resultados = resultados;
+    console.log(
+      'Resultados actualizados en el componente padre:',
+      this.resultados
+    );
   }
 
-  crear() {
-    const data = this.resultados.map((resultado, index) => ({
-      MARCA: resultado.auto?.cd_MARCA || '',
-      ANIO: resultado.auto?.anio || '',
-      MODELO: resultado.auto?.cd_MODELO || '',
-      SUMA_ASEGURADA: '', // Campo vacío
-      TP_VEHICULO: resultado.auto?.cd_TIPODEVEHICULO || '',
-      PLAN: resultado.plan || '', // Campo de entrada
-      FRANQUICIA: resultado.franquicia || '', // Campo de entrada
-      PATENTE: resultado.patente || '', // Campo de entrada
-      MOTOR: resultado.motor || '', // Campo de entrada
-      CHASIS: resultado.chasis || '', // Campo de entrada
+  private guardarResultadosEnLocalStorage() {
+    const resultadosSinErrores = this.resultados.filter(
+      (resultado) => !resultado.error
+    );
+    localStorage.setItem('resultados', JSON.stringify(resultadosSinErrores));
+  }
+
+  reintentarErrores() {
+    this.guardarResultadosEnLocalStorage();
+
+    const autosConErrores = this.resultados
+      .filter((resultado) => resultado.error)
+      .map((resultado) => ({
+        ...resultado,
+        busqueda: resultado.busqueda,
+        item: resultado.item,
+      }));
+
+    this.autos = autosConErrores;
+
+    this.datosRecibidos = false;
+  }
+
+  exportarResultados() {
+    console.log('Exportar resultados' + this.resultados);
+    const data = this.resultados.map((resultado) => ({
+      cd_MARCA: resultado.cd_MARCA || '',
+      anio: resultado.anio || '',
+      cd_MODELO: resultado.cd_MODELO || '',
+      cd_TIPODEVEHICULO: resultado.cd_TIPODEVEHICULO || '',
+      plan: resultado.plan || '',
+      franquicia: resultado.franquicia || '',
+      patente: resultado.patente || '',
+      motor: resultado.motor || '',
+      chasis: resultado.chasis || '',
     }));
 
     const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(data);
@@ -151,16 +159,28 @@ export class BuscadorComponent {
       type: 'array',
     });
 
-    this.saveAsExcelFile(excelBuffer, 'datos_vehiculos');
+    this.saveAsExcelFile(excelBuffer, 'resultados_busqueda');
   }
 
   private saveAsExcelFile(buffer: any, fileName: string): void {
     const data: Blob = new Blob([buffer], { type: EXCEL_TYPE });
-    FileSaver.saveAs(data, `${fileName}_export_${new Date().getTime()}.xlsx`);
+    FileSaver.saveAs(data, `flotamars_${new Date().getTime()}.xlsx`);
   }
 
-  nueva() {
-    this.autoService.clearAutos();
+  limpiar() {
+    this.autos = Array.from({ length: this.cantidadAutos }, () => ({
+      item: 1,
+      marca: '',
+      anio: '',
+      modelo: '',
+      plan: '',
+      franquicia: '',
+      patente: '',
+      motor: '',
+      chasis: '',
+    }));
+    this.resultados = [];
+    this.datosRecibidos = false;
     this.router.navigate(['/']);
   }
 }

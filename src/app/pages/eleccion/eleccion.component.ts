@@ -43,9 +43,14 @@ export class EleccionComponent {
 
   processData(data: any[]): { marca: string; modelo: string; anio: string }[] {
     return data.slice(1).map((row: any) => ({
-      marca: row[0] || '', // Verificar si row[0] no es undefined
-      modelo: row[1] || '', // Verificar si row[1] no es undefined
-      anio: row[2] ? row[2].toString() : '', // Verificar si row[2] no es undefined
+      marca: row[0] || '',
+      anio: row[1] || '',
+      modelo: row[2] ? row[2].toString() : '',
+      plan: row[3] ? row[3].toString() : '',
+      franquicia: row[4] ? row[4].toString() : '',
+      patente: row[5] ? row[5].toString() : '',
+      motor: row[6] ? row[6].toString() : '',
+      chasis: row[7] ? row[7].toString() : '',
     }));
   }
 

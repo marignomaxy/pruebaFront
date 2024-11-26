@@ -1,0 +1,179 @@
+<div *ngIf="hayErrores()" class="flex justify-center mt-4">
+  <button mat-raised-button color="warn" (click)="reintentar()">Errores</button>
+</div>
+<div class="overflow-x-auto mx-8">
+  <table mat-table [dataSource]="resultados" class="mat-elevation-z8 w-full">
+    <!-- Item Column -->
+    <ng-container matColumnDef="item">
+      <th mat-header-cell *matHeaderCellDef class="text-center align-middle">
+        Item
+      </th>
+      <td mat-cell *matCellDef="let auto; let i = index" class="text-center">
+        {{ i + 1 }}
+      </td>
+    </ng-container>
+
+    <!-- Código Marca Column -->
+    <ng-container matColumnDef="cd_MARCA">
+      <th mat-header-cell *matHeaderCellDef class="text-center">
+        Código Marca
+      </th>
+      <td mat-cell *matCellDef="let auto" class="text-center">
+        <input
+          matInput
+          type="text"
+          [(ngModel)]="auto.cd_MARCA"
+          class="w-26 bg-gray-200 text-center"
+          placeholder="Código Marca"
+        />
+      </td>
+    </ng-container>
+
+    <!-- Año Column -->
+    <ng-container matColumnDef="anio">
+      <th mat-header-cell *matHeaderCellDef class="text-center">Año</th>
+      <td mat-cell *matCellDef="let auto" class="text-center">
+        <input
+          matInput
+          type="text"
+          [(ngModel)]="auto.anio"
+          class="w-24 bg-gray-200 text-center"
+          placeholder="Año"
+        />
+      </td>
+    </ng-container>
+
+    <!-- Código Modelo Column -->
+    <ng-container matColumnDef="cd_MODELO">
+      <th mat-header-cell *matHeaderCellDef class="text-center">
+        Código Modelo
+      </th>
+      <td mat-cell *matCellDef="let auto" class="text-center">
+        <input
+          matInput
+          type="text"
+          [(ngModel)]="auto.cd_MODELO"
+          class="w-26 bg-gray-200 text-center"
+          placeholder="Código Modelo"
+        />
+      </td>
+    </ng-container>
+
+    <!-- Código Tipo de Vehículo Column -->
+    <ng-container matColumnDef="cd_TIPODEVEHICULO">
+      <th mat-header-cell *matHeaderCellDef class="text-center">
+        Código Tipo de Vehículo
+      </th>
+      <td mat-cell *matCellDef="let auto" class="text-center">
+        <input
+          matInput
+          type="text"
+          [(ngModel)]="auto.cd_TIPODEVEHICULO"
+          class="w-26 bg-gray-200 text-center"
+          placeholder="Código Tipo de Vehículo"
+        />
+      </td>
+    </ng-container>
+
+    <!-- Tipo de Vehículo Column -->
+    <ng-container matColumnDef="dr_TIPODEVEHICULO">
+      <th mat-header-cell *matHeaderCellDef class="text-center">
+        Tipo de Vehículo
+      </th>
+      <td mat-cell *matCellDef="let auto" class="text-center">
+        <input
+          matInput
+          type="text"
+          [(ngModel)]="auto.dr_TIPODEVEHICULO"
+          class="w-26 bg-gray-200 text-center"
+          placeholder="Tipo de Vehículo"
+        />
+      </td>
+    </ng-container>
+
+    <!-- Plan Column -->
+    <ng-container matColumnDef="plan">
+      <th mat-header-cell *matHeaderCellDef class="text-center">Plan</th>
+      <td mat-cell *matCellDef="let auto" class="text-center">
+        <input
+          matInput
+          type="text"
+          [(ngModel)]="auto.plan"
+          class="w-24 bg-gray-200 text-center"
+          placeholder="Plan"
+        />
+      </td>
+    </ng-container>
+
+    <!-- Franquicia Column -->
+    <ng-container matColumnDef="franquicia">
+      <th mat-header-cell *matHeaderCellDef class="text-center">Franquicia</th>
+      <td mat-cell *matCellDef="let auto" class="text-center">
+        <input
+          matInput
+          type="text"
+          [(ngModel)]="auto.franquicia"
+          class="w-24 bg-gray-200 text-center"
+          placeholder="Franquicia"
+        />
+      </td>
+    </ng-container>
+
+    <!-- Patente Column -->
+    <ng-container matColumnDef="patente">
+      <th mat-header-cell *matHeaderCellDef class="text-center">Patente</th>
+      <td mat-cell *matCellDef="let auto" class="text-center">
+        <input
+          matInput
+          type="text"
+          [(ngModel)]="auto.patente"
+          class="w-24 bg-gray-200 text-center"
+          placeholder="Patente"
+        />
+      </td>
+    </ng-container>
+
+    <!-- Motor Column -->
+    <ng-container matColumnDef="motor">
+      <th mat-header-cell *matHeaderCellDef class="text-center">Motor</th>
+      <td mat-cell *matCellDef="let auto" class="text-center">
+        <input
+          matInput
+          type="text"
+          [(ngModel)]="auto.motor"
+          class="w-24 bg-gray-200 text-center"
+          placeholder="Motor"
+        />
+      </td>
+    </ng-container>
+
+    <!-- Chasis Column -->
+    <ng-container matColumnDef="chasis">
+      <th mat-header-cell *matHeaderCellDef class="text-center">Chasis</th>
+      <td mat-cell *matCellDef="let auto" class="text-center">
+        <input
+          matInput
+          type="text"
+          [(ngModel)]="auto.chasis"
+          class="w-24 bg-gray-200 text-center"
+          placeholder="Chasis"
+        />
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="error">
+      <th mat-header-cell *matHeaderCellDef>Error</th>
+      <td mat-cell *matCellDef="let element" class="text-red-500">
+        {{ element.error }}
+      </td>
+    </ng-container>
+
+    <!-- Header and Row Definition -->
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  </table>
+</div>
+<div class="flex justify-center mt-4">
+  <button mat-raised-button color="primary" (click)="exportar()">
+    Exportar en excel
+  </button>
+</div>
